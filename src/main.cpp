@@ -42,7 +42,10 @@ $on_mod(Loaded) {
 		ui->refreshDpad();
 		ui->updateUINodeVisibility(enabled);
 		if (!ui->m_uiNodes) return;
-		CCNode* p1Move = nullptr, p2Move = nullptr, p1Jump = nullptr, p2Jump = nullptr;
+		CCNode* p1Move = nullptr;
+		CCNode* p2Move = nullptr;
+		CCNode* p1Jump = nullptr;
+		CCNode* p2Jump = nullptr;
 		const bool hasNodeIDs = Loader::get()->isModLoaded("geode.node-ids");
 		p1Move = hasNodeIDs ? ui->getChildByID("platformer-p1-move-button") : typeinfo_cast<GJUINode*>(m_uiLayer->m_uiNodes->objectAtIndex(0));
 		p2Move = hasNodeIDs ? ui->getChildByID("platformer-p2-move-button") : typeinfo_cast<GJUINode*>(m_uiLayer->m_uiNodes->objectAtIndex(1));
