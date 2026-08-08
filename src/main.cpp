@@ -47,10 +47,10 @@ $on_mod(Loaded) {
 		CCNode* p1Jump = nullptr;
 		CCNode* p2Jump = nullptr;
 		const bool hasNodeIDs = Loader::get()->isModLoaded("geode.node-ids");
-		p1Move = hasNodeIDs ? ui->getChildByID("platformer-p1-move-button") : typeinfo_cast<GJUINode*>(m_uiLayer->m_uiNodes->objectAtIndex(0));
-		p2Move = hasNodeIDs ? ui->getChildByID("platformer-p2-move-button") : typeinfo_cast<GJUINode*>(m_uiLayer->m_uiNodes->objectAtIndex(1));
-		p1Jump = hasNodeIDs ? ui->getChildByID("platformer-p1-jump-button") : typeinfo_cast<GJUINode*>(m_uiLayer->m_uiNodes->objectAtIndex(2));
-		p2Jump = hasNodeIDs ? ui->getChildByID("platformer-p2-jump-button") : typeinfo_cast<GJUINode*>(m_uiLayer->m_uiNodes->objectAtIndex(3));
+		p1Move = hasNodeIDs ? ui->getChildByID("platformer-p1-move-button") : typeinfo_cast<GJUINode*>(ui->m_uiNodes->objectAtIndex(0));
+		p2Move = hasNodeIDs ? ui->getChildByID("platformer-p2-move-button") : typeinfo_cast<GJUINode*>(ui->m_uiNodes->objectAtIndex(1));
+		p1Jump = hasNodeIDs ? ui->getChildByID("platformer-p1-jump-button") : typeinfo_cast<GJUINode*>(ui->m_uiNodes->objectAtIndex(2));
+		p2Jump = hasNodeIDs ? ui->getChildByID("platformer-p2-jump-button") : typeinfo_cast<GJUINode*>(ui->m_uiNodes->objectAtIndex(3));
 		if (p1Move) p1Move->setVisible(enabled);
 		if (p2Move) p2Move->setVisible(enabled);
 		if (p1Jump) p1Jump->setVisible(enabled && ui->m_dualMode);
