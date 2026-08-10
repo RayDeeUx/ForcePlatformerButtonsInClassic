@@ -1,8 +1,6 @@
 {
 	"geode": "5.8.1",
 	"gd": {
-		"win": "2.2081",
-		"mac": "2.2081",
 		"ios": "2.2081",
 		"android": "2.2081"
 	},
@@ -10,7 +8,7 @@
 	"name": "ForcePlatformerButtonsInClassic",
 	"version": "v1.0.0",
 	"developer": "RayDeeUx",
-	"description": "Read the mod name.",
+	"description": "Enables L/R controls in Classic levels that listen for them.",
 	"repository": "https://codeberg.org/RayDeeUx/ForcePlatformerButtonsInClassic",
 	"settings": {
 		"enabled": {
