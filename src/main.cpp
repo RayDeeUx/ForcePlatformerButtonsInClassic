@@ -31,27 +31,46 @@ bool enabled = false;
 		"<cl>(From ForcePlatformerButtonsInClassic by RayDeeUx)</c>\n" detailedDesc\
 	);
 
-$on_mod(Loaded) {
+bool shouldBotherWithThis(GJBaseGameLayer* gjbgl) {
+	return gjbgl && !gjbgl->m_isPlatformer;
+}
+
+void togglePlatformerControls(UILayer* ui, const bool enabled) {
+	#ifdef GEODE_IS_DESKTOP
+	return log::info("ui exists: {}, enabled: {}", ui != nullptr, enabled);
+	#else
+	if (!ui) return;
+	ui->m_inPlatformer = enabled;
+	ui->refreshDpad();
+	ui->updateUINodeVisibility(enabled);
+	#endif
+}
+
+void enablePlatformerControls(UILayer* ui) {
+	if (!ui) return;
+	togglePlatformerControls(ui, true);
+}
+
+void disablePlatformerControls(UILayer* ui) {
+	if (!ui) return;
+	togglePlatformerControls(ui, false);
+}
+
+$on_game(Loaded) {
 	enabled = Mod::get()->getSettingValue<bool>("enabled");
 	listenForSettingChanges<bool>("enabled", [](const bool enabledNew) {
 		enabled = enabledNew;
-		GJBaseGameLayer* gjbgl = GJBaseGameLayer::get();
-		if (!gjbgl || gjbgl->m_isPlatformer || !gjbgl->m_uiLayer) return;
-		UILayer* ui = gjbgl->m_uiLayer;
-		ui->m_inPlatformer = enabled;
-		ui->refreshDpad();
-		ui->updateUINodeVisibility(enabled);
+		if (GJBaseGameLayer* gjbgl = GJBaseGameLayer::get(); shouldBotherWithThis(gjbgl)) {
+			togglePlatformerControls(gjbgl->m_uiLayer, enabled);
+		}
 	});
-	ADD_TOGGLE("Force Platformer Buttons in Classic Mode", "enabled", "If playing a Classic level, forcibly toggle Platformer controls.")
+	ADD_TOGGLE("Force Platformer Buttons", "enabled", "If playing a Classic level, forcibly toggle Platformer controls.")
 }
 
 class $modify(MyUILayer, UILayer) {
 	void togglePlatformerMode(bool inPlatformer) {
-		if (enabled && m_gameLayer && !m_gameLayer->m_isPlatformer) {
-			inPlatformer = true;
-			this->m_inPlatformer = true;
-			UILayer::refreshDpad();
-			UILayer::updateUINodeVisibility(inPlatformer);
+		if (enabled && shouldBotherWithThis(this->m_gameLayer)) {
+			enablePlatformerControls(this);
 		} else {
 			UILayer::togglePlatformerMode(inPlatformer);
 		}
