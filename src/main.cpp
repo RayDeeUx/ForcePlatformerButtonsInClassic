@@ -35,14 +35,14 @@ bool shouldBotherWithThis(GJBaseGameLayer* gjbgl) {
 	return gjbgl && !gjbgl->m_isPlatformer;
 }
 
-void togglePlatformerControls(UILayer* ui, const bool enabled) {
+void togglePlatformerControls(UILayer* ui, const bool enabledFromParam) {
 	#ifdef GEODE_IS_DESKTOP
-	return log::info("ui exists: {}, enabled: {}", ui != nullptr, enabled);
+	return log::info("ui exists: {}, enabledFromParam: {}", ui != nullptr, enabledFromParam);
 	#else
 	if (!ui) return;
-	ui->m_inPlatformer = enabled;
+	ui->m_inPlatformer = enabledFromParam;
 	ui->refreshDpad();
-	ui->updateUINodeVisibility(enabled);
+	ui->updateUINodeVisibility(enabledFromParam);
 	#endif
 }
 
