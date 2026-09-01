@@ -16,6 +16,19 @@
 			"name": "Enabled",
 			"type": "bool",
 			"default": true
+		},
+		"autoDetectEventTriggersInstead": {
+			"name": "Auto-Detect Platformer Buttons",
+			"description": "Auto-detect Event triggers instead of manually toggling Platformer controls.",
+			"type": "bool",
+			"default": true
+		},
+		"debugLabel": {
+			"name": "Debug Label",
+			"description": "If playing a Classic level with the \"Auto-Detect Platformer Buttons\" setting enabled, view debugging information for a sanity check.",
+			"type": "bool",
+			"default": false,
+			"enable-if": "enabled && autoDetectEventTriggersInstead"
 		}
 	},
 	"dependencies": {
