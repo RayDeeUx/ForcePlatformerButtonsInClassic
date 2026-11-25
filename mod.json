@@ -1,12 +1,12 @@
 {
-	"geode": "5.9.0",
+	"geode": "6.0.0",
 	"gd": {
-		"ios": "2.2081",
-		"android": "2.2081"
+		"ios": "2.2091",
+		"android": "2.2091"
 	},
 	"id": "raydeeux.forceplatformerbuttonsinclassic",
 	"name": "ForcePlatformerButtonsInClassic",
-	"version": "v1.0.1",
+	"version": "v1.0.2",
 	"developer": "RayDeeUx",
 	"description": "Enables L/R controls in Classic levels that listen for them.",
 	"repository": "https://codeberg.org/RayDeeUx/ForcePlatformerButtonsInClassic",
@@ -31,7 +31,7 @@
 		}
 	},
 	"dependencies": {
-		"ninxout.options_api": ">=1.1.0"
+		"raydeeux.harkenplatformerinputseverywhere": ">=1.0.1"
 	},
 	"issues": {
 		"url": "https://discord.com/channels/911701438269386882/1205523212444639292",

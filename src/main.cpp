@@ -1,4 +1,4 @@
-#include <ninxout.options_api/include/API.hpp>
+// #include <ninxout.options_api/API.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #include <Geode/modify/UILayer.hpp>
 
@@ -8,6 +8,7 @@ bool enabled = false;
 bool autoDetectEventTriggersInstead = false;
 bool debugLabel = false;
 
+/*
 #define ADD_TOGGLE(displayName, settingsID, detailedDesc)\
 	OptionsAPI::addPreLevelSetting<bool>(\
 		displayName,\
@@ -33,6 +34,7 @@ bool debugLabel = false;
 		},\
 		"<cl>(From ForcePlatformerButtonsInClassic by RayDeeUx)</c>\n" detailedDesc\
 	);
+*/
 
 bool shouldBotherWithThis(GJBaseGameLayer* gjbgl) {
 	return gjbgl && !gjbgl->m_isPlatformer && !gjbgl->m_level->isPlatformer();
@@ -85,9 +87,9 @@ $on_game(Loaded) {
 		debugLabel = debugLabelNew;
 		reactToSettingsChanges();
 	});
-	ADD_TOGGLE("Force Platformer Buttons", "enabled", "If playing a Classic level, forcibly toggle Platformer controls.")
-	ADD_TOGGLE("Auto-Detect Platformer Buttons", "autoDetectEventTriggersInstead", "Auto-detect Event triggers instead of manually toggling Platformer controls.")
-	ADD_TOGGLE("Platformer Buttons Auto-Detection Debug label", "debugLabel", "If playing a Classic level with the \"Auto-Detect Platformer Buttons\" setting enabled, view debugging information for a sanity check.")
+	// ADD_TOGGLE("Force Platformer Buttons", "enabled", "If playing a Classic level, forcibly toggle Platformer controls.")
+	// ADD_TOGGLE("Auto-Detect Platformer Buttons", "autoDetectEventTriggersInstead", "Auto-detect Event triggers instead of manually toggling Platformer controls.")
+	// ADD_TOGGLE("Platformer Buttons Auto-Detection Debug label", "debugLabel", "If playing a Classic level with the \"Auto-Detect Platformer Buttons\" setting enabled, view debugging information for a sanity check.")
 }
 
 class $modify(MyUILayer, UILayer) {
@@ -122,7 +124,7 @@ class $modify(GJBaseGameLayer) {
 		std::array<bool, 4> found{false, false, false, false};
 		std::array<bool, 4> active{false, false, false, false};
 
-		for (auto& [pairOfEventsAndUnkInts, triggers] : m_gameState.m_unkMapPairGJGameEventIntVectorEventTriggerInstance) {
+		for (auto& [pairOfEventsAndUnkInts, triggers] : m_gameState.m_gameEventTriggers) {
 			const int gameEvent = static_cast<int>(pairOfEventsAndUnkInts.first);
 			if (gameEvent < 71 || gameEvent > 74) continue;
 
