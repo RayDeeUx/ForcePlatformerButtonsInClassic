@@ -4,9 +4,7 @@
 
 using namespace geode::prelude;
 
-bool enabled = false;
-bool autoDetectEventTriggersInstead = false;
-bool debugLabel = false;
+bool enabled = false, autoDetectEventTriggersInstead = false, debugLabel = false, hasHarken = false;
 
 /*
 #define ADD_TOGGLE(displayName, settingsID, detailedDesc)\
@@ -37,14 +35,14 @@ bool debugLabel = false;
 */
 
 bool shouldBotherWithThis(GJBaseGameLayer* gjbgl) {
-	return gjbgl && !gjbgl->m_isPlatformer && !gjbgl->m_level->isPlatformer();
+	return hasHarken && gjbgl && !gjbgl->m_isPlatformer && !gjbgl->m_level->isPlatformer();
 }
 
 void togglePlatformerControls(UILayer* ui, const bool enabledFromParam) {
 	#ifdef GEODE_IS_DESKTOP
 	return log::info("ui exists: {}, enabledFromParam: {}", ui != nullptr, enabledFromParam);
 	#else
-	if (!ui) return;
+	if (!hasHarken || !ui) return;
 	ui->m_inPlatformer = enabledFromParam;
 	ui->refreshDpad();
 	ui->updateUINodeVisibility(enabledFromParam);
@@ -52,17 +50,17 @@ void togglePlatformerControls(UILayer* ui, const bool enabledFromParam) {
 }
 
 void enablePlatformerControls(UILayer* ui) {
-	if (!ui || ui->m_inPlatformer) return;
+	if (!hasHarken || !ui || ui->m_inPlatformer) return;
 	togglePlatformerControls(ui, true);
 }
 
 void disablePlatformerControls(UILayer* ui) {
-	if (!ui || !ui->m_inPlatformer) return;
+	if (!hasHarken || !ui || !ui->m_inPlatformer) return;
 	togglePlatformerControls(ui, false);
 }
 
 void reactToSettingsChanges() {
-	if (GJBaseGameLayer* gjbgl = GJBaseGameLayer::get(); gjbgl && shouldBotherWithThis(gjbgl) && gjbgl->m_uiLayer) {
+	if (GJBaseGameLayer* gjbgl = GJBaseGameLayer::get(); hasHarken && gjbgl && shouldBotherWithThis(gjbgl) && gjbgl->m_uiLayer) {
 		if (gjbgl->m_uiLayer->getChildByID("relevant-labels"_spr)) {
 			gjbgl->m_uiLayer->getChildByID("relevant-labels"_spr)->setVisible(autoDetectEventTriggersInstead && debugLabel);
 		}
@@ -75,15 +73,22 @@ $on_game(Loaded) {
 	enabled = Mod::get()->getSettingValue<bool>("enabled");
 	autoDetectEventTriggersInstead = Mod::get()->getSettingValue<bool>("autoDetectEventTriggersInstead");
 	debugLabel = Mod::get()->getSettingValue<bool>("debugLabel");
+
+	hasHarken = Loader::get()->isModLoaded("raydeeux.harkenplatformerinputseverywhere");
+	if (!hasHarken) return;
+
 	listenForSettingChanges<bool>("enabled", [](const bool enabledNew) {
+		if (!hasHarken) return;
 		enabled = enabledNew;
 		reactToSettingsChanges();
 	});
 	listenForSettingChanges<bool>("autoDetectEventTriggersInstead", [](const bool autoDetectEventTriggersInsteadNew) {
+		if (!hasHarken) return;
 		autoDetectEventTriggersInstead = autoDetectEventTriggersInsteadNew;
 		reactToSettingsChanges();
 	});
 	listenForSettingChanges<bool>("debugLabel", [](const bool debugLabelNew) {
+		if (!hasHarken) return;
 		debugLabel = debugLabelNew;
 		reactToSettingsChanges();
 	});
@@ -94,7 +99,7 @@ $on_game(Loaded) {
 
 class $modify(MyUILayer, UILayer) {
 	void togglePlatformerMode(bool inPlatformer) {
-		if (enabled && !autoDetectEventTriggersInstead && shouldBotherWithThis(this->m_gameLayer)) {
+		if (hasHarken && enabled && !autoDetectEventTriggersInstead && shouldBotherWithThis(this->m_gameLayer)) {
 			enablePlatformerControls(this);
 		} else {
 			UILayer::togglePlatformerMode(inPlatformer);
@@ -105,7 +110,7 @@ class $modify(MyUILayer, UILayer) {
 class $modify(GJBaseGameLayer) {
 	void update(float dt) {
 		GJBaseGameLayer::update(dt);
-		if (!enabled || !autoDetectEventTriggersInstead || !shouldBotherWithThis(this)) return;
+		if (!hasHarken || !enabled || !autoDetectEventTriggersInstead || !shouldBotherWithThis(this)) return;
 
 		geode::Label* stupid = nullptr;
 		if (m_uiLayer && !m_uiLayer->getChildByID("relevant-labels"_spr)) {
@@ -116,7 +121,7 @@ class $modify(GJBaseGameLayer) {
 			stupid->setAnchorPoint({1.f, 1.f});
 			stupid->setLimitLabelSize({CCDirector::get()->getWinSize().width * .7f, CCDirector::get()->getWinSize().height * .25f});
 			stupid->setPosition({CCDirector::get()->getWinSize().width * .98f, 80.f});
-		} else {
+		} else if (m_uiLayer) {
 			stupid = static_cast<geode::Label*>(m_uiLayer->getChildByID("relevant-labels"_spr));
 		}
 
@@ -146,6 +151,8 @@ class $modify(GJBaseGameLayer) {
 		}
 
 		shouldNotBeInPlatformer ? disablePlatformerControls(this->m_uiLayer) : enablePlatformerControls(this->m_uiLayer);
+
+		if (!stupid) return;
 		stupid->setColor(shouldNotBeInPlatformer ? ccColor3B{255, 0, 0} : ccColor3B{0, 255, 0});
 		stupid->setText(result);
 		stupid->setVisible(debugLabel);
