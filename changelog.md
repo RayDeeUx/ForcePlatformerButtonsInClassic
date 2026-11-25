@@ -1,6 +1,6 @@
 # ForcePlatformerButtonsInClassic Changelog
 ## v1.0.2
-- 2.2091 as a game update
+- 2.2091 as a game update was a net negative.
 - Temporarily remove Options API integration.
 ## v1.0.1
 - Added Platformer Controls auto-detection.
