@@ -6,7 +6,7 @@
 	},
 	"id": "raydeeux.forceplatformerbuttonsinclassic",
 	"name": "ForcePlatformerButtonsInClassic",
-	"version": "v1.0.2",
+	"version": "v1.0.3",
 	"developer": "RayDeeUx",
 	"description": "Enables L/R controls in Classic levels that listen for them.",
 	"repository": "https://codeberg.org/RayDeeUx/ForcePlatformerButtonsInClassic",
